@@ -1,23 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import axios from "axios";
+import "./index.css";
+import Card from "./Card";
+import Button from "./Button";
 
 function App() {
+  const [advice, setAdvice] = useState("");
+  const getAdvice = () => {
+    axios
+      .get("https://api.adviceslip.com/advice")
+      .then((response) => {
+        console.log("Promise", response);
+        let welcome = document.getElementById("welcome-message");
+        welcome.innerText = "";
+        console.log(welcome);
+        setAdvice(response.data.slip.advice);
+        // showAdvice(response);
+        // const advice = response.data.slip.advice;
+        // console.log(advice);
+        // return advice;
+      })
+      .catch((error) => {
+        console.error("Error", error);
+      });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div className="body-container">
+      <header className="title">
+        <h1>Advice Generator</h1>
       </header>
+      <Card advice={advice} />
+      <Button getAdvice={getAdvice} />
     </div>
   );
 }
